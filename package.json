@@ -1,0 +1,29 @@
+{
+  "name": "line-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aykuli/line-test.git"
+  },
+  "author": "Aynur Shauerman <aykuli@ya.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aykuli/line-test/issues"
+  },
+  "homepage": "https://github.com/aykuli/line-test#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^5.2.0",
+    "config": "^3.3.1",
+    "express": "^4.17.1",
+    "express-validator": "^6.4.1",
+    "mongoose": "^5.9.12",
+    "nodemon": "^2.0.3"
+  }
+}

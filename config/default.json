@@ -1,0 +1,4 @@
+{
+  "port": 5000,
+  "mongo-connection-string": "mongodb+srv://tester:tester123@cluster0-gag0e.azure.mongodb.net/line-test?retryWrites=true&w=majority"
+}
