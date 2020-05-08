@@ -7,6 +7,8 @@ const config = require('config');
 
 const router = Router()
 
+const readUserData = require('../tmp/read-user-data');
+
 const JWT_SECRET_KEY = config.get('jwt-secret-key')
 
 router.get(
@@ -18,6 +20,7 @@ router.get(
       .isLength({ min: 6 })
   ],
   async (req, res) => {
+    console.log('user get')
     try {
       const errors = validationResult(req)
 
@@ -28,6 +31,7 @@ router.get(
         })
       }
 
+      const savedUser = await readUserData('user.json')
 
       console.log('req.body: ', req.body)
 
@@ -62,6 +66,7 @@ router.get(
       res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
     }
   })
+
 
 // it seems according to task we don't have to register user
 // router.post(
