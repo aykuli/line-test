@@ -9,47 +9,8 @@ const router = Router()
 
 const JWT_SECRET_KEY = config.get('jwt-secret-key')
 
-router.post(
-  '/register',
-  [
-    check('email', 'Email написан неправильно.'),
-    check('password', 'Минимальная длина пароля  - 6 символов')
-      .isLength({ min: 6 })
-  ],
-  async (req, res) => {
-    try {
-      const errors = validationResult(req)
-
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array(),
-          message: 'Введите правильные email/пароль для регистрации.'
-        })
-      }
-
-      const { email, password } = req.body
-
-      const checkUserEmail = await User.findOne({ email })
-
-      if (checkUserEmail) {
-        res.status(400).json({ message: 'Пользователь с такойпочтой уже существует' })
-      }
-
-      const hashedpassword = await bcrypt.hash(password, 10)
-      const user = new User({ email, password: hashedpassword })
-
-      await User.save()
-
-      res.status(201).json({ message: `Пользователь c email ${email} создан.` })
-
-    } catch (e) {
-      res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
-    }
-  }
-)
-
-router.post(
-  '/login',
+router.get(
+  '/',
   [
     check('email', 'Введите корректный email').normalizeEmail().isEmail(),
     check('password', 'Введите пароль').exists(),
@@ -66,6 +27,9 @@ router.post(
           message: 'Введите правильные email/пароль для входа.'
         })
       }
+
+
+      console.log('req.body: ', req.body)
 
       const { email, password } = req.body
       const user = await User.findOne({ email })
@@ -98,5 +62,45 @@ router.post(
       res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
     }
   })
+
+// it seems according to task we don't have to register user
+// router.post(
+//   '/register',
+//   [
+//     check('email', 'Email написан неправильно.'),
+//     check('password', 'Минимальная длина пароля  - 6 символов')
+//       .isLength({ min: 6 })
+//   ],
+//   async (req, res) => {
+//     try {
+//       const errors = validationResult(req)
+
+//       if (!errors.isEmpty()) {
+//         return res.status(400).json({
+//           errors: errors.array(),
+//           message: 'Введите правильные email/пароль для регистрации.'
+//         })
+//       }
+
+//       const { email, password } = req.body
+
+//       const checkUserEmail = await User.findOne({ email })
+
+//       if (checkUserEmail) {
+//         res.status(400).json({ message: 'Пользователь с такойпочтой уже существует' })
+//       }
+
+//       const hashedpassword = await bcrypt.hash(password, 10)
+//       const user = new User({ email, password: hashedpassword })
+
+//       await User.save()
+
+//       res.status(201).json({ message: `Пользователь c email ${email} создан.` })
+
+//     } catch (e) {
+//       res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
+//     }
+//   }
+// )
 
 module.exports = router
