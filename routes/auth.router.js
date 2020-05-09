@@ -17,7 +17,7 @@ router.post(
     check('email', 'Введите корректный email').normalizeEmail().isEmail(),
     check('password', 'Введите пароль').exists(),
     check('password', 'Минимальная длина пароля  - 6 символов')
-      .isLength({ min: 6 })
+      .isLength({ min: 4 })
   ],
   async (req, res) => {
     console.log('auth post')
@@ -32,7 +32,38 @@ router.post(
         })
       }
 
-      res.status(200).json({ "hello": "hello111" })
+      const admin = await readUserData('user.json')
+
+      console.log('req.body: ', req.body)
+
+      const { email, password } = req.body
+      const isAdminExist = admin.email === email
+      console.log('isAdminExist: ', isAdminExist)
+
+      if (!isAdminExist) {
+        return res.status(400).json({ message: 'Пользователь не найден.' })
+      }
+
+      console.log('password: ', password)
+      console.log('admin.password: ', admin.password)
+      // check password
+      // const isMatch = await bcrypt.compare(password, admin.password)
+      const isMatch = admin.password === password
+      console.log('isMatch: ', isMatch)
+
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Неверный пароль. Попробуйте еще.' })
+      }
+
+      const token = jwt.sign(
+        {
+          userId: admin.id
+        },
+        JWT_SECRET_KEY,
+        {
+          expiresIn: '1h' // токен живет 1 час
+        });
+      res.status(200).json({ token, userId: admin.id })
     } catch (e) {
       res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
     }
