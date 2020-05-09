@@ -11,9 +11,9 @@
       </p>
     </div>
 
-    <p *ngIf="isEndTest">Результат теста линии: {{ impulseCount }} импульсов</p>
+    <p *ngIf="isEndTest && isStartTest">Результат теста линии: {{ impulseCount }} импульсов</p>
 
-    <button *ngIf="isEndTest" class="btn btn-info" type="button" (click)="handleClearTest()">
+    <button *ngIf="isEndTest && isStartTest" class="btn btn-info" type="button" (click)="handleClearTest()">
       Очистить результаты теста
     </button>
   </ngb-toast>

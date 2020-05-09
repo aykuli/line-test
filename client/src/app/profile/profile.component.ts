@@ -48,10 +48,10 @@ export class ProfileComponent implements OnInit {
   }
 
   handleClearTest() {
+    this.isEndTest = false;
     this.isStartTest = false;
     this.progressValue = 0;
     this.timeRemain = TEST_TIME_MAX;
-    this.isEndTest = false;
     this.impulseCount = 0;
     clearInterval(this.intervalId)
   }

@@ -1,27 +1,9 @@
 <div class="app">
   <h1 class="title">Приложение тестирования линии</h1>
-  <nav>
-    <ul>
-      <li>
-        <a class="nav-link" routerLink="/" routerLinkActive="active">
-          Home
-        </a>
-      </li>
-      <li style="float:right">
-        <a class="nav-link" style="float:right" routerLink="login" routerLinkActive="active"
-          *ngIf="!authService.loggedIn">
-          Login
-        </a>
-      </li>
-      <li style="float:right">
-        <a class="nav-link" (click)="authService.logout()" href="#" *ngIf="authService.loggedIn">
-          Logout
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <button class="btn btn-success" (click)="authService.logout()" href="#" *ngIf="authService.loggedIn">
+    Logout
+  </button>
 </div>
 
-<!-- <app-login *ngIf="!authService.loggedIn"></app-login>
-<app-profile *ngIf="authService.loggedIn"></app-profile> -->
-<app-profile></app-profile>
+<app-login *ngIf="!authService.loggedIn"></app-login>
+<app-profile *ngIf="authService.loggedIn"></app-profile>
