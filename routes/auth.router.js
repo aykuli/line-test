@@ -11,35 +11,52 @@ const readUserData = require('../tmp/read-user-data');
 
 const JWT_SECRET_KEY = config.get('jwt-secret-key')
 
-router.post('/', async (req, res) => {
-  console.log('auth post')
-  console.log('req.body: ', req.body)
-  try {
-    res.status(200).json({ "hello": "hello111" })
-  } catch (e) {
-    res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
-  }
-})
+router.post(
+  '/',
+  [
+    check('email', 'Введите корректный email').normalizeEmail().isEmail(),
+    check('password', 'Введите пароль').exists(),
+    check('password', 'Минимальная длина пароля  - 6 символов')
+      .isLength({ min: 6 })
+  ],
+  async (req, res) => {
+    console.log('auth post')
+    console.log('req.body: ', req.body)
+    try {
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array(),
+          message: 'Введите правильные email/пароль для входа.'
+        })
+      }
+
+      res.status(200).json({ "hello": "hello111" })
+    } catch (e) {
+      res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
+    }
+  })
 
 // router.post(
 //   '/',
-//   [
-//     check('email', 'Введите корректный email').normalizeEmail().isEmail(),
-//     check('password', 'Введите пароль').exists(),
-//     check('password', 'Минимальная длина пароля  - 6 символов')
-//       .isLength({ min: 6 })
-//   ],
+// [
+//   check('email', 'Введите корректный email').normalizeEmail().isEmail(),
+//   check('password', 'Введите пароль').exists(),
+//   check('password', 'Минимальная длина пароля  - 6 символов')
+//     .isLength({ min: 6 })
+// ],
 //   async (req, res) => {
 //     console.log('auth post')
 //     try {
-//       const errors = validationResult(req)
+// const errors = validationResult(req)
 
-//       if (!errors.isEmpty()) {
-//         return res.status(400).json({
-//           errors: errors.array(),
-//           message: 'Введите правильные email/пароль для входа.'
-//         })
-//       }
+// if (!errors.isEmpty()) {
+//   return res.status(400).json({
+//     errors: errors.array(),
+//     message: 'Введите правильные email/пароль для входа.'
+//   })
+// }
 
 //       const savedUser = await readUserData('user.json')
 

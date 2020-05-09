@@ -9,6 +9,7 @@ const userRouter = require('./routes/user.router')
 
 const PORT = config.get('port') || 5000;
 const app = express();
+app.use(express.json());
 
 const swaggerDocument = YAML.load(path.join(__dirname, './doc/api.yaml'));
 
@@ -19,6 +20,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
   res.header("Access-Control-Allow-Credentials", "true");
+
   next();
 });
 

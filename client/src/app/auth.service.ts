@@ -14,15 +14,19 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string) {
-    console.log('отправляю на сервер данные пользователя по адрес: \n', this.url + `/auth\n`)
-    console.log('данные. email: ', email, ' password: ', password, '\n')
-
-    return this.http.post(this.url + `/auth`, { email: email, password: password })
+    const body = { email, password };
+    const url = this.url + `/auth`;
+    return this.http.post(url, body);
   }
 
   getUser() {
     console.log('getting user')
-    return this.http.get(this.url + `/user`)
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
+    return this.http.get(this.url + `/user`, httpOptions)
   }
 
   setUser() {
