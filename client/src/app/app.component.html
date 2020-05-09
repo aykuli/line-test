@@ -1,20 +1,7 @@
 <div class="app">
-  <h1 class="title">Line testin application</h1>
-  <ngb-toast *ngIf="!isAuth" class="toast">
-    <h2 class="title__h2">Enter to start work</h2>
-    <app-user-form></app-user-form>
-  </ngb-toast>
+  <h1 class="title">Приложение тестирования линии</h1>
 
-  <nav>
-    <ul>
-      <li *ngIf="isAuth">
-        <a routerLink="/" routerLinkActive="active">Выйти</a>
-      </li>
-      <li>
-        <a routerLink="/enter" routerLinkActive="active">Enter</a>
-      </li>
-    </ul>
-  </nav>
+  <div>{{userFromTmp}}</div>
 </div>
 
 

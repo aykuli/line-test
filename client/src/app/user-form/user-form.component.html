@@ -1,21 +1,27 @@
-<form class="form" (ngSubmit)="handleSubmit()" #userForm="ngForm">
-  <div class="form-group">
-    <label for="email" class="label">Email:</label>
-    <input type="email" id="email" name="email" class="input" placeholder="введите email" required #email="ngModel"
-      [(ngModel)]="user.email">
-    <p class="alert alert-danger" [hidden]="email.valid">
-      Поле "email" обязательно для заполнения
-    </p>
-  </div>
-  <div>
-    <label for="password" class="label">Пароль</label>
-    <input type="text" id="password" name="password" placeholder="введите пароль" class="input" required
-      #password="ngModel" [(ngModel)]="user.password">
-    <p class="alert alert-danger" [hidden]="password.valid">
-      Поле "password" обязательно для заполнения
-    </p>
-  </div>
-  <button type="submit" class="btn btn-success" [disabled]="!userForm.form.valid">
-    Войти
-  </button>
-</form>
+<div class="container">
+  <ngb-toast class="toast">
+    <p class="title__sub">Войдите, чтобы начать работу.</p>
+
+    <form class="form" (ngSubmit)="handleSubmit()" #userForm="ngForm">
+      <div class="form-group">
+        <label for="email" class="label">Email:</label>
+        <input type="email" id="email" name="email" class="input" placeholder="введите email" required #email="ngModel"
+          [(ngModel)]="user.email">
+        <p class="alert alert-danger" [hidden]="email.valid">
+          Поле "email" обязательно для заполнения
+        </p>
+      </div>
+      <div>
+        <label for="password" class="label">Пароль</label>
+        <input type="text" id="password" name="password" placeholder="введите пароль" class="input" required
+          #password="ngModel" [(ngModel)]="user.password">
+        <p class="alert alert-danger" [hidden]="password.valid">
+          Поле "password" обязательно для заполнения
+        </p>
+      </div>
+      <button type="submit" class="btn btn-success" [disabled]="!userForm.form.valid">
+        Войти
+      </button>
+    </form>
+  </ngb-toast>
+</div>

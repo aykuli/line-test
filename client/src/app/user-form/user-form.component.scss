@@ -1,3 +1,9 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 40px;
+}
+
 .form {
   text-align: center;
 
@@ -22,4 +28,12 @@
   & button {
     margin: 20px 0;
   }
+}
+
+.alert {
+  margin-top: 10px;
+}
+
+.toast {
+  padding: 15px;  
 }

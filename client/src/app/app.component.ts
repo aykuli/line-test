@@ -2,20 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import User from '../models/user'
 
+import { UserService } from './services/user.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  user: User;
-
+  userFromTmp = {};
   title = 'client';
   isAuth: boolean = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private user: UserService) { }
 
   ngOnInit() {
-    this.http.get('../assets/user.json').subscribe((data: User) => this.user = data)
+    this.userFromTmp = this.user.getUser()
   }
 }
