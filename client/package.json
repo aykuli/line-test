@@ -1,6 +1,7 @@
 {
   "name": "client",
   "version": "0.0.0",
+  "proxy": "http://localhost:5000",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

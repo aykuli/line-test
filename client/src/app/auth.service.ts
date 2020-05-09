@@ -1,27 +1,35 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-
-const SERVER_PORT = 5000;
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  url = `https://localhost:${SERVER_PORT}`
-  token;
+  url = `http://localhost:5000`
+  token: string;
+  user: object = { id: '222', email: '000', password: '000' };
+
 
   constructor(private http: HttpClient, private router: Router) { }
 
   login(email: string, password: string) {
-    this.http.post(this.url + `/auth`, { email, password }).subscribe((responce: any) => {
-      console.log('authentificated')
-      this.router.navigate(['profile']);
-      localStorage.removeItem('line_test_token')
-      localStorage.setItem('line_test_token', responce.token)
-    })
+    console.log('отправляю на сервер данные пользователя по адрес: \n', this.url + `/auth\n`)
+    console.log('данные. email: ', email, ' password: ', password, '\n')
+
+    return this.http.post(this.url + `/auth`, { email: email, password: password })
   }
+
+  getUser() {
+    console.log('getting user')
+    return this.http.get(this.url + `/user`)
+  }
+
+  setUser() {
+    this.user = this.getUser();
+    console.log(this.user)
+  }
+
   logout() {
     localStorage.removeItem('line_tst_token')
   }

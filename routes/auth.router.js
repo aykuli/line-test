@@ -11,61 +11,71 @@ const readUserData = require('../tmp/read-user-data');
 
 const JWT_SECRET_KEY = config.get('jwt-secret-key')
 
-router.get(
-  '/',
-  [
-    check('email', 'Введите корректный email').normalizeEmail().isEmail(),
-    check('password', 'Введите пароль').exists(),
-    check('password', 'Минимальная длина пароля  - 6 символов')
-      .isLength({ min: 6 })
-  ],
-  async (req, res) => {
-    console.log('user get')
-    try {
-      const errors = validationResult(req)
+router.post('/', async (req, res) => {
+  console.log('auth post')
+  console.log('req.body: ', req.body)
+  try {
+    res.status(200).json({ "hello": "hello111" })
+  } catch (e) {
+    res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
+  }
+})
 
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array(),
-          message: 'Введите правильные email/пароль для входа.'
-        })
-      }
+// router.post(
+//   '/',
+//   [
+//     check('email', 'Введите корректный email').normalizeEmail().isEmail(),
+//     check('password', 'Введите пароль').exists(),
+//     check('password', 'Минимальная длина пароля  - 6 символов')
+//       .isLength({ min: 6 })
+//   ],
+//   async (req, res) => {
+//     console.log('auth post')
+//     try {
+//       const errors = validationResult(req)
 
-      const savedUser = await readUserData('user.json')
+//       if (!errors.isEmpty()) {
+//         return res.status(400).json({
+//           errors: errors.array(),
+//           message: 'Введите правильные email/пароль для входа.'
+//         })
+//       }
 
-      console.log('req.body: ', req.body)
+//       const savedUser = await readUserData('user.json')
 
-      const { email, password } = req.body
-      const user = await User.findOne({ email })
+//       console.log('req.body: ', req.body)
 
-      if (!user) {
-        return res.status(400).json({ message: 'Пользователь не найден.' })
-      }
+//       const { email, password } = req.body
+//       const user = await User.findOne({ email })
 
-      // check passworf
-      const isMatch = await bcrypt.compare(password, user.password)
+//       if (!user) {
+//         return res.status(400).json({ message: 'Пользователь не найден.' })
+//       }
 
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Неверный пароль. Попробуйте еще.' })
-      }
+//       // check passworf
+//       const isMatch = await bcrypt.compare(password, user.password)
 
-
-      const token = jwt.sign(
-        {
-          userId: user.id
-        },
-        JWT_SECRET_KEY,
-        {
-          expiresIn: '1h' // токен живет 1 час
-        });
-
-      res.status(200).json({ token, userId: user.id })
+//       if (!isMatch) {
+//         return res.status(400).json({ message: 'Неверный пароль. Попробуйте еще.' })
+//       }
 
 
-    } catch (e) {
-      res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
-    }
-  })
+//       const token = jwt.sign(
+//         {
+//           userId: user.id
+//         },
+//         JWT_SECRET_KEY,
+//         {
+//           expiresIn: '1h' // токен живет 1 час
+//         });
+
+//       res.status(200).json({ token, userId: user.id })
+
+
+//     } catch (e) {
+//       res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
+//     }
+//   })
 
 
 // it seems according to task we don't have to register user

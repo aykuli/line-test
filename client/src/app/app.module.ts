@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AuthService } from './auth.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { ProfileComponent } from './profile/profile.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
