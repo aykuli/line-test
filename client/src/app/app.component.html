@@ -1,7 +1,31 @@
 <div class="app">
   <h1 class="title">Приложение тестирования линии</h1>
 
-  <div>{{userFromTmp}}</div>
+  <!-- <div>{{userFromTmp}}</div> -->
+  <nav>
+    <ul>
+      <li>
+        <a class="nav-link" routerLink="/" routerLinkActive="active">
+          Home
+        </a>
+      </li>
+      <li>
+        <a class="nav-link" routerLink="profile" routerLinkActive="active">
+          Profile
+        </a>
+      </li>
+      <li style="float:right">
+        <a class="nav-link" style="float:right" routerLink="login" routerLinkActive="active" *ngIf="!authService.logIn">
+          Login
+        </a>
+      </li>
+      <li style="float:right">
+        <a class="nav-link" (click)="authService.logout()" href="#" *ngIf="authService.logIn">
+          Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>
 
 
