@@ -1,3 +1,43 @@
 .error-msg {
   background-color: rgb(236, 162, 162);
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 40px;
+}
+
+.form {
+  text-align: center;
+
+  & .label {
+    display: block;
+    margin: 0;
+
+    text-align: left;
+  }
+
+  & .input {
+    width: 100%;
+    padding: 0 10px;
+    border: none;
+    border-bottom: 1px solid #222;
+
+    &:hover, &:focus {
+      border-color: #28a745;
+      outline: none;
+    }
+  }
+  & button {
+    margin: 20px 0;
+  }
+}
+
+.alert {
+  margin-top: 10px;
+}
+
+.toast {
+  padding: 15px;  
+}

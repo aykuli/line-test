@@ -1,14 +1,25 @@
-<h3>Войдите, чтобы начать работу</h3>
-<div>
-  <div class="spacer">
-    <label for="Email">Email</label>
-    <input type="text" placeholder="Email" [(ngModel)]="email">
-  </div>
-  <div class="spacer">
-    <label for="password">Пароль</label>
-    <input type="password" placeholder="password" [(ngModel)]="password" class="form-control" />
-  </div>
-  <div class="spacer">
-    <button type="submit" (click)="login()">Войти</button>
-  </div>
+<div class="container">
+  <ngb-toast class="toast">
+    <p class="title__sub">Войдите, чтобы начать работу.</p>
+
+    <div class="form">
+      <div class="form-group">
+        <label for="email" class="label">
+          Email:
+        </label>
+        <input type="text" placeholder="Email" id="email" name="email" class="input" required [(ngModel)]="email">
+      </div>
+      <div class="form-group">
+        <label for="password" class="label">
+          Пароль:
+        </label>
+        <input type="password" placeholder="password" name="password" placeholder="введите пароль" class="input"
+          required [(ngModel)]="password" />
+      </div>
+      <button type="submit" class="btn btn-success" (click)="login()">
+        Войти
+      </button>
+    </div>
+
+  </ngb-toast>
 </div>

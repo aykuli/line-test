@@ -8,7 +8,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { UserFormComponent } from './user-form/user-form.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthService } from './auth.service';
@@ -16,7 +15,6 @@ import { AuthService } from './auth.service';
 @NgModule({
   declarations: [
     AppComponent,
-    UserFormComponent,
     LoginComponent,
     ProfileComponent
   ],

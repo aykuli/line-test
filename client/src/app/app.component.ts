@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
 
 export interface User {
@@ -22,11 +22,6 @@ export class AppComponent {
 
   constructor(public authService: AuthService) { }
 
-  ngOnInit() {
-    this.authService.getUser().subscribe((data: User) => {
-      this.user = data
-      console.log('data: ', data)
-    })
-  }
+  ngOnInit() { }
 
 }

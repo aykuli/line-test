@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service'
 import { error } from 'protractor';
 
+export interface DataWithToken {
+  token: string
+  userId: string
+}
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,7 +14,6 @@ import { error } from 'protractor';
 export class LoginComponent implements OnInit {
   email = ''
   password = ''
-  errorMsgs = [{ msg: '' }]
 
   constructor(public authService: AuthService) { }
 
@@ -18,13 +21,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log('login in LoginComponent')
-    this.authService.login(this.email, this.password).subscribe(data => {
-      console.log('ligon data: ', data)
-    },
-      ({ error }) => {
-        console.log('error: ', error.errors)
-        this.errorMsgs = error.errors;
-      })
+    this.authService.login(this.email, this.password)
   }
 }

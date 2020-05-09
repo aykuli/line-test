@@ -1,14 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+
+export interface DataWithToken {
+  token: string
+  userId: string
+}
+
+export interface User {
+  email: string
+  password: string
+  id: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
   url = `http://localhost:5000`
-  token: string;
-  user: object = { id: '222', email: '000', password: '000' };
+  token: string = '';
+  user: User;
+  errorMsgs = [{ msg: '' }]
 
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -16,29 +29,24 @@ export class AuthService {
   login(email: string, password: string) {
     const body = { email, password };
     const url = this.url + `/auth`;
-    return this.http.post(url, body);
-  }
+    this.http.post(url, body).subscribe((data: DataWithToken) => {
 
-  getUser() {
-    console.log('getting user')
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      })
-    };
-    return this.http.get(this.url + `/user`, httpOptions)
-  }
+      this.token = data.token
+      console.log('token: ', this.token)
 
-  setUser() {
-    this.user = this.getUser();
-    console.log(this.user)
+      localStorage.removeItem('line_tst_token')
+      localStorage.setItem('line_tst_token', this.token)
+    }, ({ error }) => {
+
+      this.errorMsgs = error.errors;
+    });
   }
 
   logout() {
     localStorage.removeItem('line_tst_token')
   }
 
-  public get logIn(): boolean {
-    return (localStorage.getItem('line_tst_token') !== null)
+  public get loggedIn(): boolean {
+    return (localStorage.getItem('line_tst_token') === this.token)
   }
 }

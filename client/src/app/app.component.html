@@ -1,7 +1,5 @@
 <div class="app">
   <h1 class="title">Приложение тестирования линии</h1>
-
-  <!-- <div>{{userFromTmp}}</div> -->
   <nav>
     <ul>
       <li>
@@ -9,26 +7,26 @@
           Home
         </a>
       </li>
-      <li>
-        <a class="nav-link" routerLink="profile" routerLinkActive="active">
+      <!-- <li>
+        <a class="nav-link" routerLink="profile" routerLinkActive="active" *ngIf="authService.loggedIn">
           Profile
-        </a>
-      </li>
+        </a> -->
+      <!-- </li> -->
       <li style="float:right">
-        <a class="nav-link" style="float:right" routerLink="login" routerLinkActive="active" *ngIf="!authService.logIn">
+        <a class="nav-link" style="float:right" routerLink="login" routerLinkActive="active"
+          *ngIf="!authService.loggedIn">
           Login
         </a>
       </li>
       <li style="float:right">
-        <a class="nav-link" (click)="authService.logout()" href="#" *ngIf="authService.logIn">
+        <a class="nav-link" (click)="authService.logout()" href="#" *ngIf="authService.loggedIn">
           Logout
         </a>
       </li>
     </ul>
   </nav>
-  <p>{{user.email}}</p>
-  <p>{{user.password}}</p>
 </div>
 
-
-<router-outlet></router-outlet>
+<app-login *ngIf="!authService.loggedIn"></app-login>
+<app-profile *ngIf="authService.loggedIn"></app-profile>
+<!-- <router-outlet></router-outlet> -->
