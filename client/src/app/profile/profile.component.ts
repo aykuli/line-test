@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbProgressbarConfig } from '@ng-bootstrap/ng-bootstrap'
 
-const TEST_TIME_MAX = 30;
+const TEST_TIME_MAX = 300;
 const MAX_IMPULSES = 1010;
 const MIN_IMPULSES = 1002
 @Component({
@@ -13,6 +13,7 @@ const MIN_IMPULSES = 1002
 export class ProfileComponent implements OnInit {
   isStartTest = false;
   progressValue = 0;
+  timeRemain = TEST_TIME_MAX;
   isEndTest = false;
   impulseCount = 0;
   intervalId
@@ -49,25 +50,30 @@ export class ProfileComponent implements OnInit {
   handleClearTest() {
     this.isStartTest = false;
     this.progressValue = 0;
+    this.timeRemain = TEST_TIME_MAX;
     this.isEndTest = false;
     this.impulseCount = 0;
     clearInterval(this.intervalId)
   }
 
   async testing() {
-    const percentage = 30;
-
     let curr = this.progressValue
+
     this.intervalId = setInterval(() => {
-      if (curr > percentage) {
+      if (curr > TEST_TIME_MAX) {
         clearInterval(this.intervalId)
+      } else if (curr === TEST_TIME_MAX) {
+        setTimeout(() => {
+          this.isEndTest = true;
+        }, 1000)
+        return;
       }
       this.progressValue = curr++
-    }, 1000)
+      this.timeRemain = Math.floor((TEST_TIME_MAX - this.progressValue) / 10)
+    }, 100)
 
-    this.isEndTest = true;
+    // show impulses count on page
     this.randomImpulses()
-    console.log('this.impulseCount: ', this.impulseCount)
   }
 
 }

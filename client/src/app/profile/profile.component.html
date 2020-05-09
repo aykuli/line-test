@@ -7,7 +7,7 @@
     <div class="bar__wrap" *ngIf="isStartTest">
       <ngb-progressbar [value]="progressValue" type="info"></ngb-progressbar>
       <p class="bar__info">
-        До окончания теста осталось {{ 30 - progressValue }} секунд
+        До окончания теста осталось {{ timeRemain }} секунд
       </p>
     </div>
 
