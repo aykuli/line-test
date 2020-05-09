@@ -7,11 +7,6 @@
           Home
         </a>
       </li>
-      <!-- <li>
-        <a class="nav-link" routerLink="profile" routerLinkActive="active" *ngIf="authService.loggedIn">
-          Profile
-        </a> -->
-      <!-- </li> -->
       <li style="float:right">
         <a class="nav-link" style="float:right" routerLink="login" routerLinkActive="active"
           *ngIf="!authService.loggedIn">
@@ -27,6 +22,6 @@
   </nav>
 </div>
 
-<app-login *ngIf="!authService.loggedIn"></app-login>
-<app-profile *ngIf="authService.loggedIn"></app-profile>
-<!-- <router-outlet></router-outlet> -->
+<!-- <app-login *ngIf="!authService.loggedIn"></app-login>
+<app-profile *ngIf="authService.loggedIn"></app-profile> -->
+<app-profile></app-profile>

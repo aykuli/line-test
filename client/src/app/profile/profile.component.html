@@ -1,3 +1,21 @@
 <div class="profile">
-  <p>If you can see this page, you are logged in!</p>
+  <p>You are logged in!</p>
+  <ngb-toast class="toast__profile">
+    <button class="btn btn-info" type="button" (click)="handleStartTest()" *ngIf="!isStartTest">
+      Начать тест линии
+    </button>
+    <div class="bar__wrap" *ngIf="isStartTest">
+      <ngb-progressbar [value]="progressValue" type="info"></ngb-progressbar>
+      <p class="bar__info">
+        До окончания теста осталось {{ 30 - progressValue }} секунд
+      </p>
+    </div>
+
+    <p *ngIf="isEndTest">Результат теста линии: {{ impulseCount }} импульсов</p>
+
+    <button *ngIf="isEndTest" class="btn btn-info" type="button" (click)="handleClearTest()">
+      Очистить результаты теста
+    </button>
+  </ngb-toast>
+
 </div>
