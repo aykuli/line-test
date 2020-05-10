@@ -16,6 +16,7 @@ class LogInfo {
 export interface DataWithToken {
   token: string
   userId: string
+  data: Data
 }
 
 export interface User {
@@ -34,10 +35,9 @@ export class AuthService {
   token: string = localStorage.getItem(constantas.lineTestToken);
   user: User;
   errorMsgs: any = '';
-  serverMsg: string = '';
+  serverMsg = null;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
     this.isloggedOut.next({ isloggedOut: false })
@@ -48,6 +48,9 @@ export class AuthService {
     this.http.post(url, body).subscribe((data: DataWithToken) => {
 
       this.token = data.token;
+      if (data.data) {
+        this.dataSource.next(data.data)
+      }
 
       localStorage.removeItem(constantas.lineTestToken);
       localStorage.setItem(constantas.lineTestToken, this.token);
@@ -58,7 +61,17 @@ export class AuthService {
       } else {
         this.errorMsgs = error.message;
       }
+      setTimeout(() => {
+        this.errorMsgs = null;
+      }, 2000)
     });
+  }
+
+  isEmptyData(obj: object) {
+    for (let key in obj) {
+      return false;
+    }
+    return true;
   }
 
   logout() {
@@ -67,7 +80,8 @@ export class AuthService {
 
     // отправляем данные на сервер, чтоб там сохранились результаты работы,
     // чтобы пользователь мог заходить с любой машины
-    const body = { ...this.dataSource.getValue(), token: this.token, date: Date.now() };
+    const data = this.dataSource.getValue();
+    const body = !this.isEmptyData(data) ? { ...this.dataSource.getValue(), token: this.token, date: Date.now() } : { token: this.token };
     const url = this.url + '/put-profile-data';
 
     this.http.put(url, body).subscribe((data: any) => {

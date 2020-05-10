@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-const readUserData = require('../tmp/read-user-data');
+const readFile = require('../utils/read-file');
 
 const router = Router()
 const JWT_SECRET_KEY = config.get('jwt-secret-key')
@@ -28,7 +28,7 @@ router.post(
         })
       }
 
-      const admin = await readUserData('user-with-password-hashed.json')
+      const admin = await readFile('/tmp/user-with-password-hashed.json')
 
       const { email, password } = req.body
       const isAdminExist = admin.email === email
@@ -51,12 +51,14 @@ router.post(
         {
           expiresIn: '1h' // token lives 1 hour
         });
-      res.status(200).json({ token, userId: admin.id })
+
+      const prevTestData = await readFile('logs/test-results.json')
+      res.status(200).json({ token, userId: admin.id, data: prevTestData })
+
     } catch (e) {
       res.status(500).json({ massage: 'Ошибка. Повторите попытку.' })
     }
-  })
-
+  });
 
 // it seems according to task we don't have to register user
 // router.post(

@@ -2,8 +2,8 @@
   <ngb-toast class="toast">
     <p class="title__sub">Войдите, чтобы начать работу.</p>
 
-    <div class="alert">
-      <ngb-alert *ngIf="authService.errorMsgs">
+    <div *ngIf="authService.errorMsgs" class="alert__wrap">
+      <ngb-alert class="alert" [dismissible]="false">
         {{ authService.errorMsgs }}
       </ngb-alert>
     </div>

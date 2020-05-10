@@ -11,11 +11,14 @@ import constantas from '../../assets/contstantas'
   providers: [NgbProgressbarConfig]
 })
 export class ProfileComponent implements OnInit {
-  isStartTest = false;
-  progressValue = 0;
-  timeRemain = constantas.TEST_TIME_MAX;
-  isEndTest = false;
-  impulseCount = 0;
+  allData = this.authService.dataSource.getValue();
+  isEmptyData = this.authService.isEmptyData(this.allData)
+
+  isStartTest = this.isEmptyData ? false : this.allData.isStartTest;
+  progressValue = this.isEmptyData ? 0 : this.allData.progressValue;
+  timeRemain = this.isEmptyData ? constantas.TEST_TIME_MAX : this.allData.timeRemain;
+  isEndTest = this.isEmptyData ? false : this.allData.isEndTest;
+  impulseCount = this.isEmptyData ? 0 : this.allData.impulseCount;
   intervalId: any;
 
   constructor(config: NgbProgressbarConfig, public authService: AuthService) {
@@ -27,6 +30,10 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const data = this.authService.dataSource.getValue();
+    if (data.isStartTest) {
+      this.handleStartTest()
+    }
   }
 
   randomImpulses() {
@@ -53,6 +60,14 @@ export class ProfileComponent implements OnInit {
     this.timeRemain = constantas.TEST_TIME_MAX;
     this.impulseCount = 0;
     clearInterval(this.intervalId)
+
+    this.authService.dataSource.next({
+      isStartTest: this.isStartTest,
+      progressValue: this.progressValue,
+      timeRemain: this.timeRemain,
+      isEndTest: this.isEndTest,
+      impulseCount: this.impulseCount
+    })
   }
 
   async testing() {
@@ -62,14 +77,16 @@ export class ProfileComponent implements OnInit {
 
       // execute if only user is logged in
       if (!this.authService.isloggedOut.getValue().isloggedOut) {
-        if (curr > constantas.TEST_TIME_MAX) {
+        if (curr > constantas.TEST_TIME_MAX - 1) {
           clearInterval(this.intervalId)
-        } else if (curr === constantas.TEST_TIME_MAX) {
-          setTimeout(() => {
-            this.isEndTest = true;
-          }, 1000)
+
+        } else if (curr === constantas.TEST_TIME_MAX - 1 && !this.isEndTest) {
+          // show impulses count on page
+          this.randomImpulses()
+          this.isEndTest = true;
           return;
         }
+
         this.progressValue = curr++
         this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10)
 
@@ -85,8 +102,6 @@ export class ProfileComponent implements OnInit {
 
     }, 100)
 
-    // show impulses count on page
-    this.randomImpulses()
   }
 
 }
