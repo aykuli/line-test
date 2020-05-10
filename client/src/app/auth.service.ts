@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+
+import constantas from '../assets/contstantas';
 
 export interface DataWithToken {
   token: string
@@ -17,24 +18,24 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
-
-  url = `http://localhost:5000`
-  token: string = '';
+  url = constantas.url
+  token: string = localStorage.getItem(constantas.lineTestToken);
   user: User;
   errorMsgs: any = '';
 
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) {
+  }
 
   login(email: string, password: string) {
     const body = { email, password };
-    const url = this.url + `/auth`;
+    const url = this.url + constantas.auth;
     this.http.post(url, body).subscribe((data: DataWithToken) => {
 
       this.token = data.token
 
-      localStorage.removeItem('line_tst_token')
-      localStorage.setItem('line_tst_token', this.token)
+      localStorage.removeItem(constantas.lineTestToken)
+      localStorage.setItem(constantas.lineTestToken, this.token)
     }, ({ error }) => {
 
       if (error.errors) {
@@ -46,10 +47,11 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('line_tst_token')
+    localStorage.removeItem(constantas.lineTestToken)
+
   }
 
   public get loggedIn(): boolean {
-    return (localStorage.getItem('line_tst_token') === this.token)
+    return (localStorage.getItem(constantas.lineTestToken) === this.token && this.token !== null)
   }
 }
