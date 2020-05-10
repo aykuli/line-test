@@ -1,5 +1,4 @@
 const { Router } = require('express')
-const User = require('../models/user.model')
 const bcrypt = require('bcryptjs')
 const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken');
@@ -20,8 +19,6 @@ router.post(
       .isLength({ min: 4 })
   ],
   async (req, res) => {
-    console.log('auth post')
-    console.log('req.body: ', req.body)
     try {
       const errors = validationResult(req)
 
@@ -43,12 +40,8 @@ router.post(
       if (!isAdminExist) {
         return res.status(400).json({ message: 'Пользователь не найден.' })
       }
-
-      console.log('password: ', password)
-      console.log('admin.password: ', admin.password)
       // check password
       const isMatch = await bcrypt.compare(password, admin.password)
-      // const isMatch = admin.password === password
       console.log('isMatch: ', isMatch)
 
       if (!isMatch) {
