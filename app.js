@@ -2,7 +2,6 @@ const express = require('express');
 const config = require('config');
 
 const authRouter = require('./routes/auth.router')
-const userRouter = require('./routes/user.router')
 
 const PORT = config.get('port') || 5000;
 const app = express();
@@ -18,7 +17,6 @@ app.use(function (req, res, next) {
 });
 
 app.use('/auth', authRouter)
-app.use('/user', userRouter)
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send(`Server is running on http://localhost:${PORT}/`);

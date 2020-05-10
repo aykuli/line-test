@@ -21,7 +21,7 @@ export class AuthService {
   url = `http://localhost:5000`
   token: string = '';
   user: User;
-  errorMsgs = [{ msg: '' }]
+  errorMsgs: any = '';
 
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -32,13 +32,16 @@ export class AuthService {
     this.http.post(url, body).subscribe((data: DataWithToken) => {
 
       this.token = data.token
-      console.log('token: ', this.token)
 
       localStorage.removeItem('line_tst_token')
       localStorage.setItem('line_tst_token', this.token)
     }, ({ error }) => {
 
-      this.errorMsgs = error.errors;
+      if (error.errors) {
+        this.errorMsgs = error.errors[0].msg;
+      } else {
+        this.errorMsgs = error.message;
+      }
     });
   }
 

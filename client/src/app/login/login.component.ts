@@ -14,6 +14,7 @@ export interface DataWithToken {
 export class LoginComponent implements OnInit {
   email = ''
   password = ''
+  emailAlertClosed = false;
 
   constructor(public authService: AuthService) { }
 
@@ -22,5 +23,9 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authService.login(this.email, this.password)
+  }
+
+  closeAlert() {
+
   }
 }

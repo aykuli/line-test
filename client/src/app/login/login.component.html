@@ -2,24 +2,30 @@
   <ngb-toast class="toast">
     <p class="title__sub">Войдите, чтобы начать работу.</p>
 
-    <div class="form">
+    <div class="alert">
+      <ngb-alert *ngIf="authService.errorMsgs">
+        {{ authService.errorMsgs }}
+      </ngb-alert>
+    </div>
+
+    <form class="form">
       <div class="form-group">
         <label for="email" class="label">
           Email:
         </label>
-        <input type="text" placeholder="Email" id="email" name="email" class="input" required [(ngModel)]="email">
+        <input type="text" placeholder="Email" id="email" name="email" class="form-control" required
+          [(ngModel)]="email">
       </div>
       <div class="form-group">
         <label for="password" class="label">
           Пароль:
         </label>
-        <input type="password" placeholder="password" name="password" placeholder="введите пароль" class="input"
+        <input type="password" placeholder="password" name="password" placeholder="введите пароль" class="form-control"
           required [(ngModel)]="password" />
       </div>
       <button type="submit" class="btn btn-success" (click)="login()">
         Войти
       </button>
-    </div>
-
+    </form>
   </ngb-toast>
 </div>
