@@ -40,13 +40,14 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
+    console.log('login')
     this.isloggedOut.next({ isloggedOut: false })
+    console.log('this.isloggedOut: ', this.isloggedOut.getValue())
 
     const body = { email, password };
     const url = this.url + constantas.auth;
 
     this.http.post(url, body).subscribe((data: DataWithToken) => {
-
       this.token = data.token;
       if (data.data) {
         this.dataSource.next(data.data)
