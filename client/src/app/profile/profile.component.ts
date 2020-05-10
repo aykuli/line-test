@@ -39,7 +39,6 @@ export class ProfileComponent implements OnInit {
     } else {
       this.impulseCount = rand;
     }
-
   }
 
   handleStartTest() {
@@ -60,22 +59,29 @@ export class ProfileComponent implements OnInit {
     let curr = this.progressValue
 
     this.intervalId = setInterval(() => {
-      if (curr > constantas.TEST_TIME_MAX) {
-        clearInterval(this.intervalId)
-      } else if (curr === constantas.TEST_TIME_MAX) {
-        setTimeout(() => {
-          this.isEndTest = true;
-        }, 1000)
-        return;
-      }
-      this.progressValue = curr++
-      this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10)
 
-      // send data toauthService to send it to server
-      this.authService.dataSource.next({
-        isStartTest: this.isStartTest,
-        progressValue: this.progressValue
-      })
+      // execute if only user is logged in
+      if (!this.authService.isloggedOut.getValue().isloggedOut) {
+        if (curr > constantas.TEST_TIME_MAX) {
+          clearInterval(this.intervalId)
+        } else if (curr === constantas.TEST_TIME_MAX) {
+          setTimeout(() => {
+            this.isEndTest = true;
+          }, 1000)
+          return;
+        }
+        this.progressValue = curr++
+        this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10)
+
+        // send data toauthService to send it to server
+        this.authService.dataSource.next({
+          isStartTest: this.isStartTest,
+          progressValue: this.progressValue,
+          timeRemain: this.timeRemain,
+          isEndTest: this.isEndTest,
+          impulseCount: this.impulseCount
+        })
+      }
 
     }, 100)
 

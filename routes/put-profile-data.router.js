@@ -13,17 +13,14 @@ const TEST_RESULTS_FILE = config.get('test-results-file')
 router.put('/', async (req, res) => {
   try {
     const { token, ...data } = req.body;
-    console.log('token: ', token)
-    console.log('data: ', data)
 
     const admin = await readUserData('user-with-password-hashed.json')
-    console.log('admin: ', admin)
 
     jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         res.status(418).send({ message: 'Произошла какая-то ошибка.', error: err })
       }
-      console.log('decoded: ', decoded)
+
       if (admin.id === decoded.userId) {
         // сохраним результаты в файле
         savingTestingData(data, TEST_RESULTS_FILE);

@@ -6,6 +6,12 @@ import constantas from '../assets/contstantas';
 class Data {
   isStartTest: boolean
   progressValue: number
+  timeRemain: number
+  isEndTest: boolean
+  impulseCount: number
+}
+class LogInfo {
+  isloggedOut: boolean
 }
 export interface DataWithToken {
   token: string
@@ -22,10 +28,8 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
-
+  isloggedOut = new BehaviorSubject(new LogInfo());
   dataSource = new BehaviorSubject(new Data());
-  // data = this.dataSource.asObservable();
-
   url = constantas.url
   token: string = localStorage.getItem(constantas.lineTestToken);
   user: User;
@@ -36,6 +40,8 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
+    this.isloggedOut.next({ isloggedOut: false })
+
     const body = { email, password };
     const url = this.url + constantas.auth;
 
@@ -57,8 +63,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(constantas.lineTestToken);
-
-    console.log('this.dataSource.getValue(): ', this.dataSource.getValue())
+    this.isloggedOut.next({ isloggedOut: true })
 
     // отправляем данные на сервер, чтоб там сохранились результаты работы,
     // чтобы пользователь мог заходить с любой машины
@@ -75,10 +80,5 @@ export class AuthService {
 
   public get loggedIn(): boolean {
     return (localStorage.getItem(constantas.lineTestToken) === this.token && this.token !== null)
-  }
-
-  updatedDataSelection(data: Data) {
-    console.log('data in updatedDataSelection: ', data)
-    this.dataSource.next(data);
   }
 }
