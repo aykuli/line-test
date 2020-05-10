@@ -4,10 +4,9 @@ const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-const router = Router()
-
 const readUserData = require('../tmp/read-user-data');
 
+const router = Router()
 const JWT_SECRET_KEY = config.get('jwt-secret-key')
 
 router.post(
@@ -31,18 +30,14 @@ router.post(
 
       const admin = await readUserData('user-with-password-hashed.json')
 
-      console.log('req.body: ', req.body)
-
       const { email, password } = req.body
       const isAdminExist = admin.email === email
-      console.log('isAdminExist: ', isAdminExist)
 
       if (!isAdminExist) {
         return res.status(400).json({ message: 'Пользователь не найден.' })
       }
       // check password
       const isMatch = await bcrypt.compare(password, admin.password)
-      console.log('isMatch: ', isMatch)
 
       if (!isMatch) {
         return res.status(400).json({ message: 'Неверный пароль. Попробуйте еще.' })
@@ -54,7 +49,7 @@ router.post(
         },
         JWT_SECRET_KEY,
         {
-          expiresIn: '1h' // токен живет 1 час
+          expiresIn: '1h' // token lives 1 hour
         });
       res.status(200).json({ token, userId: admin.id })
     } catch (e) {
