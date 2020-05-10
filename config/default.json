@@ -1,4 +1,5 @@
 {
   "port": 5000,
-  "jwt-secret-key": "eltex line test"
+  "jwt-secret-key": "eltex line test",
+  "test-results-file": "test-results.json"
 }

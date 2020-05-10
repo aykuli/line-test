@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbProgressbarConfig } from '@ng-bootstrap/ng-bootstrap'
+import { AuthService } from '../auth.service'
 
 import constantas from '../../assets/contstantas'
 
@@ -17,7 +18,7 @@ export class ProfileComponent implements OnInit {
   impulseCount = 0;
   intervalId: any;
 
-  constructor(config: NgbProgressbarConfig) {
+  constructor(config: NgbProgressbarConfig, public authService: AuthService) {
     config.max = constantas.TEST_TIME_MAX;
     config.striped = true;
     config.animated = true;
@@ -69,6 +70,13 @@ export class ProfileComponent implements OnInit {
       }
       this.progressValue = curr++
       this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10)
+
+      // send data toauthService to send it to server
+      this.authService.dataSource.next({
+        isStartTest: this.isStartTest,
+        progressValue: this.progressValue
+      })
+
     }, 100)
 
     // show impulses count on page

@@ -37,3 +37,13 @@
     npm run start --prefix client 
 
 Запустится по адресу `http://localhost:4200/`
+
+## Данные пользователя
+
+    email: a@b.com
+    пароль: admin
+
+хранятся на сервере в:
+* /tmp/user.json (для чтения человеком)
+* /tmp/user-with-password-hashed.json (для работы в приложении)
+

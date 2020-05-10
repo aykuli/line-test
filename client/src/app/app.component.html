@@ -7,3 +7,7 @@
 
 <app-login *ngIf="!authService.loggedIn"></app-login>
 <app-profile *ngIf="authService.loggedIn"></app-profile>
+
+<div *ngIf="authService.serverMsg" class="popup alert alert-info">
+  {{authService.serverMsg}}
+</div>

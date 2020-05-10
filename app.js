@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('config');
 
 const authRouter = require('./routes/auth.router')
+const putProfileData = require('./routes/put-profile-data.router');
 
 const PORT = config.get('port') || 5000;
 const app = express();
@@ -16,7 +17,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/auth', authRouter)
+app.use('/auth', authRouter);
+app.use('/put-profile-data', putProfileData);
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send(`Server is running on http://localhost:${PORT}/`);
