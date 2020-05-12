@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { AuthService } from './auth.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +11,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class AppComponent {
   closeResult: string;
 
-  constructor(public authService: AuthService, private modalService: NgbModal) { }
+  constructor(public authService: AuthService) { }
 
 }

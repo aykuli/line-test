@@ -10,7 +10,9 @@
       </p>
     </div>
 
-    <p *ngIf="isEndTest && isStartTest">Результат теста линии: {{ authService.impulses }} импульсов</p>
+    <p *ngIf="isEndTest && isStartTest">
+      Результат теста линии: {{ authService.impulses }} импульсов
+    </p>
 
     <button *ngIf="isEndTest && isStartTest" class="btn btn-info" type="button" (click)="handleClearTest()">
       Очистить результаты теста

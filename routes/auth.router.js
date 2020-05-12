@@ -29,8 +29,12 @@ router.post(
       }
 
       const admin = await readFile('/tmp/user-with-password-hashed.json')
+      if (!admin) {
+        return res.status(400).json({ message: 'Пользователь не найден.' })
+      }
 
       const { email, password } = req.body
+      console.log('req.body in auth post ', req.body)
       const isAdminExist = admin.email === email
 
       if (!isAdminExist) {

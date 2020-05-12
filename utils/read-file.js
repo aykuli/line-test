@@ -9,7 +9,7 @@ const readFile = async (fileName) => {
     .readFile(fileToRead, { encoding: 'utf-8' })
     .then(res => res ? JSON.parse(res) : null)
     .catch(e => {
-      console.error('File readinf error: ', e);
+      console.error('File reading error: ', e);
       process.exit(1);
     });
 }

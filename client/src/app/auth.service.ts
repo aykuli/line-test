@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject } from 'rxjs';
 
 import constantas from '../assets/contstantas';
-class Data {
-  isStartTest: boolean
-  progressValue: number
-  timeRemain: number
-  isEndTest: boolean
-  impulseCount: number
-}
-class LogInfo {
-  isloggedOut: boolean
-}
+import Data from '../models/data';
+import LogInfo from '../models/log-info';
+
+
 export interface DataWithToken {
   token: string
   userId: string
@@ -31,14 +25,14 @@ export interface User {
 export class AuthService {
   isloggedOut = new BehaviorSubject(new LogInfo());
   dataSource = new BehaviorSubject(new Data());
+
   url = constantas.url
   token: string = localStorage.getItem(constantas.lineTestToken);
   user: User;
+  impulses = null;
 
   errorMsgs: any = '';
   serverMsg = null;
-
-  impulses = null;
 
   constructor(private http: HttpClient) { }
 
@@ -50,19 +44,21 @@ export class AuthService {
 
     this.http.post(url, body).subscribe((data: DataWithToken) => {
       this.token = data.token;
+
       if (data.data) {
-        this.dataSource.next(data.data)
+        this.dataSource.next({
+          ...data.data,
+          progressValue: data.data.progressValue * 10
+        });
       }
 
       localStorage.removeItem(constantas.lineTestToken);
       localStorage.setItem(constantas.lineTestToken, this.token);
     }, ({ error }) => {
+      this.errorMsgs = error.errors
+        ? error.errors[0].msg
+        : error.message;
 
-      if (error.errors) {
-        this.errorMsgs = error.errors[0].msg;
-      } else {
-        this.errorMsgs = error.message;
-      }
       setTimeout(() => {
         this.errorMsgs = null;
       }, 2000)
@@ -83,11 +79,17 @@ export class AuthService {
     // отправляем данные на сервер, чтоб там сохранились результаты работы,
     // чтобы пользователь мог заходить с любой машины
     const data = this.dataSource.getValue();
-    const body = !this.isEmptyData(data) ? { ...this.dataSource.getValue(), token: this.token, date: Date.now() } : { token: this.token };
+    const body = !this.isEmptyData(data)
+      ? {
+        ...this.dataSource.getValue(),
+        token: this.token, date: new Date()
+      }
+      : { token: this.token };
     const url = this.url + '/put-profile-data';
 
     this.http.put(url, body).subscribe((data: any) => {
       this.serverMsg = data.message;
+
       setTimeout(() => {
         this.serverMsg = '';
       }, 2000)
@@ -95,14 +97,21 @@ export class AuthService {
   }
 
   public get loggedIn(): boolean {
-    return (localStorage.getItem(constantas.lineTestToken) === this.token && this.token !== null)
+    return (localStorage.getItem(constantas.lineTestToken) === this.token
+      && this.token !== null)
   }
 
   sendTestResult() {
     const data = this.dataSource.getValue();
-    const body = !this.isEmptyData(data) ? { ...this.dataSource.getValue(), token: this.token, date: new Date() } : { token: this.token };
+    const body = !this.isEmptyData(data)
+      ? {
+        ...this.dataSource.getValue(),
+        token: this.token, date: new Date()
+      }
+      : { token: this.token };
     const url = this.url + '/put-profile-data';
 
-    this.http.post(url, body).subscribe((data: any) => this.impulses = data.impulses);
+    this.http.post(url, body)
+      .subscribe((data: any) => this.impulses = data.impulses);
   }
 }
