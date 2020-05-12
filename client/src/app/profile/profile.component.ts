@@ -18,7 +18,7 @@ export class ProfileComponent implements OnInit {
   progressValue = this.isEmptyData ? 0 : this.allData.progressValue;
   timeRemain = this.isEmptyData ? constantas.TEST_TIME_MAX : this.allData.timeRemain;
   isEndTest = this.isEmptyData ? false : this.allData.isEndTest;
-  impulseCount = this.isEmptyData ? 0 : this.allData.impulseCount;
+  impulseCount = null;
   intervalId: any;
 
   constructor(config: NgbProgressbarConfig, public authService: AuthService) {
@@ -33,18 +33,6 @@ export class ProfileComponent implements OnInit {
     const data = this.authService.dataSource.getValue();
     if (data.isStartTest) {
       this.handleStartTest()
-    }
-  }
-
-  randomImpulses() {
-    const min = constantas.MIN_IMPULSES;
-    const max = constantas.MAX_IMPULSES;
-
-    let rand = Math.floor(min + Math.random() * (max + 1 - min));
-    if ([1007, 1009].includes(rand)) {
-      this.randomImpulses()
-    } else {
-      this.impulseCount = rand;
     }
   }
 
@@ -82,22 +70,25 @@ export class ProfileComponent implements OnInit {
 
         } else if (curr === constantas.TEST_TIME_MAX - 1 && !this.isEndTest) {
           // show impulses count on page
-          this.randomImpulses()
           this.isEndTest = true;
+
+          // send data to authService to send it to server
+          this.authService.dataSource.next({
+            isStartTest: this.isStartTest,
+            progressValue: this.progressValue,
+            timeRemain: this.timeRemain,
+            isEndTest: this.isEndTest,
+            impulseCount: this.authService.impulses
+          })
+
+          this.authService.sendTestResult();
           return;
         }
 
         this.progressValue = curr++
         this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10)
 
-        // send data toauthService to send it to server
-        this.authService.dataSource.next({
-          isStartTest: this.isStartTest,
-          progressValue: this.progressValue,
-          timeRemain: this.timeRemain,
-          isEndTest: this.isEndTest,
-          impulseCount: this.impulseCount
-        })
+
       }
 
     }, 100)

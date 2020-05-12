@@ -11,14 +11,11 @@ export interface DataWithToken {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   email = ''
   password = ''
 
   constructor(public authService: AuthService) { }
-
-  ngOnInit(): void {
-  }
 
   login() {
     this.authService.login(this.email, this.password)

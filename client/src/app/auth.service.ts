@@ -34,15 +34,16 @@ export class AuthService {
   url = constantas.url
   token: string = localStorage.getItem(constantas.lineTestToken);
   user: User;
+
   errorMsgs: any = '';
   serverMsg = null;
+
+  impulses = null;
 
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
-    console.log('login')
     this.isloggedOut.next({ isloggedOut: false })
-    console.log('this.isloggedOut: ', this.isloggedOut.getValue())
 
     const body = { email, password };
     const url = this.url + constantas.auth;
@@ -95,5 +96,13 @@ export class AuthService {
 
   public get loggedIn(): boolean {
     return (localStorage.getItem(constantas.lineTestToken) === this.token && this.token !== null)
+  }
+
+  sendTestResult() {
+    const data = this.dataSource.getValue();
+    const body = !this.isEmptyData(data) ? { ...this.dataSource.getValue(), token: this.token, date: new Date() } : { token: this.token };
+    const url = this.url + '/put-profile-data';
+
+    this.http.post(url, body).subscribe((data: any) => this.impulses = data.impulses);
   }
 }

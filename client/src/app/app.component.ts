@@ -14,6 +14,4 @@ export class AppComponent {
 
   constructor(public authService: AuthService, private modalService: NgbModal) { }
 
-  ngOnInit() { }
-
 }
