@@ -4,7 +4,7 @@ const MAX = 1010;
 const impulseGenerator = () => {
   let rand = Math.floor(MIN + Math.random() * (MAX + 1 - MIN));
   if ([1007, 1009].includes(rand)) {
-    this.randomImpulses()
+    this.impulseGenerator()
   } else {
     return rand;
   }

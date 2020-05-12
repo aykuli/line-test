@@ -45,7 +45,7 @@ export class AuthService {
     this.http.post(url, body).subscribe((data: DataWithToken) => {
       this.token = data.token;
 
-      if (data.data) {
+      if (!this.isEmptyData(data.data)) {
         this.dataSource.next({
           ...data.data,
           progressValue: data.data.progressValue * 10
