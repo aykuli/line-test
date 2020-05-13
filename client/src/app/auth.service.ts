@@ -91,7 +91,7 @@ export class AuthService {
       : { token: this.token };
     const url = this.url + constantas.profileDataUrl;
 
-    this.http.put(url, body).subscribe((data: any) => {
+    this.http.post(url, body).subscribe((data: any) => {
       this.serverMsg = data.message;
 
       setTimeout(() => {
