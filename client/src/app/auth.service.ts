@@ -49,10 +49,7 @@ export class AuthService {
       this.router.navigate(['profile']);
 
       if (!this.isEmptyData(data.data)) {
-        this.dataSource.next({
-          ...data.data,
-          progressValue: data.data.progressValue * 10
-        });
+        this.dataSource.next(data.data);
       }
 
       localStorage.removeItem(constantas.lineTestToken);
@@ -86,9 +83,12 @@ export class AuthService {
     const body = !this.isEmptyData(data)
       ? {
         ...this.dataSource.getValue(),
-        token: this.token, date: new Date()
+        token: this.token,
+        date: new Date()
       }
-      : { token: this.token };
+      : {
+        token: this.token
+      };
     const url = this.url + constantas.profileDataUrl;
 
     this.http.post(url, body).subscribe((data: any) => {
@@ -104,7 +104,7 @@ export class AuthService {
     return (!!localStorage.getItem(constantas.lineTestToken) && this.token !== null)
   }
 
-  sendTestResult(dataToSend) {
+  sendTestResult(dataToSend: any) {
     const body = !this.isEmptyData(dataToSend)
       ? {
         ...this.dataSource.getValue(),

@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit {
   progressValue = this.isEmptyData
     ? 0
     : this.allData.progressValue;
-  timeRemain = this.isEmptyData
+  timeRemain = this.allData.timeRemain
     ? constantas.TEST_TIME_MAX / 10
     : this.allData.timeRemain;
   isEndTest = this.isEmptyData
@@ -94,11 +94,11 @@ export class ProfileComponent implements OnInit {
 
   async testing() {
     console.log('this.authService.dataSource.getValue(): ', this.authService.dataSource.getValue())
-    let curr = this.authService.dataSource.getValue().progressValue;
+    let curr = this.authService.dataSource.getValue().progressValue || this.progressValue;
 
     this.intervalId = setInterval(() => {
       // execute if only user is logged in
-      if (!this.authService.isLoggedOut.getValue().isLoggedOut) {
+      if (!this.authService.isLoggedOut.getValue().isLoggedOut && !this.isEndTest) {
         if (curr > constantas.TEST_TIME_MAX - 1) {
           clearInterval(this.intervalId)
 
@@ -136,6 +136,7 @@ export class ProfileComponent implements OnInit {
           impulseCount: this.authService.impulses
         });
         console.log('this.progressValue: ', this.progressValue)
+        console.log('his.timeRemain: ', this.timeRemain)
       }
     }, 100)
   }
