@@ -104,9 +104,8 @@ export class AuthService {
     return (!!localStorage.getItem(constantas.lineTestToken) && this.token !== null)
   }
 
-  sendTestResult() {
-    const data = this.dataSource.getValue();
-    const body = !this.isEmptyData(data)
+  sendTestResult(dataToSend) {
+    const body = !this.isEmptyData(dataToSend)
       ? {
         ...this.dataSource.getValue(),
         token: this.token, date: new Date()
@@ -116,5 +115,12 @@ export class AuthService {
 
     this.http.post(url, body)
       .subscribe((data: any) => this.impulses = data.impulses);
+  }
+
+  getPrevTestResults() {
+    const body = { token: this.token };
+    const url = this.url + constantas.profileDataUrl;
+
+    return this.http.put(url, body);
   }
 }

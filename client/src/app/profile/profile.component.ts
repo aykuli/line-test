@@ -3,6 +3,7 @@ import { NgbProgressbarConfig } from '@ng-bootstrap/ng-bootstrap'
 import { AuthService } from '../auth.service'
 
 import constantas from '../../assets/constantas'
+import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-profile',
@@ -42,6 +43,25 @@ export class ProfileComponent implements OnInit {
     if (data.isStartTest) {
       this.handleStartTest()
     }
+
+    window.addEventListener('beforeunload', () => {
+      const dataToSend = {
+        isStartTest: this.isStartTest,
+        progressValue: 30,
+        timeRemain: this.timeRemain,
+        isEndTest: this.isEndTest,
+        impulseCount: this.authService.impulses
+      }
+      this.authService.sendTestResult(dataToSend);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('зашли опять на страницу');
+      this.authService.getPrevTestResults()
+        .subscribe((data: any) => {
+          console.log('data: ', data)
+        })
+    });
   }
 
   handleStartTest() {
@@ -86,9 +106,15 @@ export class ProfileComponent implements OnInit {
             timeRemain: this.timeRemain,
             isEndTest: this.isEndTest,
             impulseCount: this.authService.impulses
-          })
+          });
+          const dataToSend = {
+            isStartTest: this.isStartTest,
+            progressValue: 30,
+            timeRemain: this.timeRemain,
+            isEndTest: this.isEndTest,
+          }
 
-          this.authService.sendTestResult();
+          this.authService.sendTestResult(dataToSend);
           return;
         }
 
