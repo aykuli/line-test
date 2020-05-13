@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
     ? 0
     : this.allData.progressValue;
   timeRemain = this.isEmptyData
-    ? constantas.TEST_TIME_MAX
+    ? constantas.TEST_TIME_MAX / 10
     : this.allData.timeRemain;
   isEndTest = this.isEmptyData
     ? false
@@ -40,6 +40,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.authService.dataSource.getValue();
+    console.log('this.authService.dataSource.getValue() тпЩтштше: ', data);
     if (data.isStartTest) {
       this.handleStartTest()
     }
@@ -47,7 +48,7 @@ export class ProfileComponent implements OnInit {
     window.addEventListener('beforeunload', () => {
       const dataToSend = {
         isStartTest: this.isStartTest,
-        progressValue: 30,
+        progressValue: this.progressValue,
         timeRemain: this.timeRemain,
         isEndTest: this.isEndTest,
         impulseCount: this.authService.impulses
@@ -59,7 +60,12 @@ export class ProfileComponent implements OnInit {
       console.log('зашли опять на страницу');
       this.authService.getPrevTestResults()
         .subscribe((data: any) => {
-          console.log('data: ', data)
+          console.log('data: ', data);
+          if (data && data.isStartTest) {
+            console.log('страница перезагружена ипродолжается тест')
+            this.authService.dataSource.next(data)
+            this.handleStartTest();
+          }
         })
     });
   }
@@ -73,21 +79,22 @@ export class ProfileComponent implements OnInit {
     this.isEndTest = false;
     this.isStartTest = false;
     this.progressValue = 0;
-    this.timeRemain = constantas.TEST_TIME_MAX;
+    this.timeRemain = constantas.TEST_TIME_MAX / 10;
     this.impulseCount = null;
     clearInterval(this.intervalId)
 
     this.authService.dataSource.next({
       isStartTest: false,
       progressValue: 0,
-      timeRemain: constantas.TEST_TIME_MAX,
+      timeRemain: constantas.TEST_TIME_MAX / 10,
       isEndTest: false,
       impulseCount: null
     })
   }
 
   async testing() {
-    let curr = this.progressValue
+    console.log('this.authService.dataSource.getValue(): ', this.authService.dataSource.getValue())
+    let curr = this.authService.dataSource.getValue().progressValue;
 
     this.intervalId = setInterval(() => {
       // execute if only user is logged in
@@ -118,16 +125,17 @@ export class ProfileComponent implements OnInit {
           return;
         }
 
-        this.progressValue = curr++
-        this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10)
+        this.progressValue = curr++;
+        this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10);
 
         this.authService.dataSource.next({
           isStartTest: this.isStartTest,
-          progressValue: Math.floor(this.progressValue / 10),
+          progressValue: this.progressValue,
           timeRemain: this.timeRemain,
           isEndTest: this.isEndTest,
           impulseCount: this.authService.impulses
-        })
+        });
+        console.log('this.progressValue: ', this.progressValue)
       }
     }, 100)
   }
