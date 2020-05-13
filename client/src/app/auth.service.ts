@@ -7,7 +7,6 @@ import Data from '../models/data';
 import LogInfo from '../models/log-info';
 import { Router } from '@angular/router';
 
-
 export interface DataWithToken {
   token: string
   userId: string

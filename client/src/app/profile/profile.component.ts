@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.authService.dataSource.getValue();
-    console.log('this.authService.dataSource.getValue() тпЩтштше: ', data);
+
     if (data.isStartTest) {
       this.handleStartTest()
     }
@@ -57,12 +57,9 @@ export class ProfileComponent implements OnInit {
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-      console.log('зашли опять на страницу');
       this.authService.getPrevTestResults()
         .subscribe((data: any) => {
-          console.log('data: ', data);
           if (data && data.isStartTest) {
-            console.log('страница перезагружена ипродолжается тест')
             this.authService.dataSource.next(data);
             this.authService.impulses = data.impulseCount;
             this.impulseCount = data.impulseCount;
@@ -95,17 +92,14 @@ export class ProfileComponent implements OnInit {
   }
 
   async testing() {
-    console.log('this.authService.dataSource.getValue(): ', this.authService.dataSource.getValue())
     let curr = this.authService.dataSource.getValue().progressValue || this.progressValue;
 
     this.intervalId = setInterval(() => {
       // execute if only user is logged in
       if (!this.authService.isLoggedOut.getValue().isLoggedOut && !this.isEndTest) {
         if (curr > constantas.TEST_TIME_MAX - 1) {
-          clearInterval(this.intervalId)
-
+          clearInterval(this.intervalId);
         }
-
 
         this.progressValue = curr++;
         this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10);
@@ -117,8 +111,8 @@ export class ProfileComponent implements OnInit {
           isEndTest: this.isEndTest,
           impulseCount: this.authService.impulses | this.authService.dataSource.getValue().impulseCount
         });
-        if (this.progressValue === constantas.TEST_TIME_MAX) {
 
+        if (this.progressValue === constantas.TEST_TIME_MAX) {
           // show impulses count on page
           this.isEndTest = true;
 
@@ -130,12 +124,13 @@ export class ProfileComponent implements OnInit {
             isEndTest: this.isEndTest,
             impulseCount: this.authService.impulses
           });
+
           const dataToSend = {
             isStartTest: this.isStartTest,
             progressValue: constantas.TEST_TIME_MAX,
             timeRemain: this.timeRemain,
             isEndTest: this.isEndTest,
-          }
+          };
 
           this.authService.sendTestResult(dataToSend);
           return;
