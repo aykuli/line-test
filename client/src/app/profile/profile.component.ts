@@ -63,7 +63,9 @@ export class ProfileComponent implements OnInit {
           console.log('data: ', data);
           if (data && data.isStartTest) {
             console.log('страница перезагружена ипродолжается тест')
-            this.authService.dataSource.next(data)
+            this.authService.dataSource.next(data);
+            this.authService.impulses = data.impulseCount;
+            this.impulseCount = data.impulseCount;
             this.handleStartTest();
           }
         })
@@ -102,28 +104,8 @@ export class ProfileComponent implements OnInit {
         if (curr > constantas.TEST_TIME_MAX - 1) {
           clearInterval(this.intervalId)
 
-        } else if (curr === constantas.TEST_TIME_MAX - 1 && !this.isEndTest) {
-          // show impulses count on page
-          this.isEndTest = true;
-
-          // send data to authService to send it to server
-          this.authService.dataSource.next({
-            isStartTest: this.isStartTest,
-            progressValue: 30,
-            timeRemain: this.timeRemain,
-            isEndTest: this.isEndTest,
-            impulseCount: this.authService.impulses
-          });
-          const dataToSend = {
-            isStartTest: this.isStartTest,
-            progressValue: 30,
-            timeRemain: this.timeRemain,
-            isEndTest: this.isEndTest,
-          }
-
-          this.authService.sendTestResult(dataToSend);
-          return;
         }
+
 
         this.progressValue = curr++;
         this.timeRemain = Math.floor((constantas.TEST_TIME_MAX - this.progressValue) / 10);
@@ -133,10 +115,31 @@ export class ProfileComponent implements OnInit {
           progressValue: this.progressValue,
           timeRemain: this.timeRemain,
           isEndTest: this.isEndTest,
-          impulseCount: this.authService.impulses
+          impulseCount: this.authService.impulses | this.authService.dataSource.getValue().impulseCount
         });
-        console.log('this.progressValue: ', this.progressValue)
-        console.log('his.timeRemain: ', this.timeRemain)
+        if (this.progressValue === constantas.TEST_TIME_MAX) {
+
+          // show impulses count on page
+          this.isEndTest = true;
+
+          // send data to authService to send it to server
+          this.authService.dataSource.next({
+            isStartTest: this.isStartTest,
+            progressValue: constantas.TEST_TIME_MAX,
+            timeRemain: this.timeRemain,
+            isEndTest: this.isEndTest,
+            impulseCount: this.authService.impulses
+          });
+          const dataToSend = {
+            isStartTest: this.isStartTest,
+            progressValue: constantas.TEST_TIME_MAX,
+            timeRemain: this.timeRemain,
+            isEndTest: this.isEndTest,
+          }
+
+          this.authService.sendTestResult(dataToSend);
+          return;
+        }
       }
     }, 100)
   }
