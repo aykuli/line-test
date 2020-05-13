@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbProgressbarConfig } from '@ng-bootstrap/ng-bootstrap'
 import { AuthService } from '../auth.service'
 
-import constantas from '../../assets/contstantas'
+import constantas from '../../assets/constantas'
 
 @Component({
   selector: 'app-profile',
@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit {
 
     this.intervalId = setInterval(() => {
       // execute if only user is logged in
-      if (!this.authService.isloggedOut.getValue().isloggedOut) {
+      if (!this.authService.isLoggedOut.getValue().isLoggedOut) {
         if (curr > constantas.TEST_TIME_MAX - 1) {
           clearInterval(this.intervalId)
 

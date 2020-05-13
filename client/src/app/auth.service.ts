@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
-import constantas from '../assets/contstantas';
+import constantas from '../assets/constantas';
 import Data from '../models/data';
 import LogInfo from '../models/log-info';
+import { Router } from '@angular/router';
 
 
 export interface DataWithToken {
@@ -23,7 +24,8 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  isloggedOut = new BehaviorSubject(new LogInfo());
+
+  isLoggedOut = new BehaviorSubject(new LogInfo());
   dataSource = new BehaviorSubject(new Data());
 
   url = constantas.url
@@ -34,16 +36,17 @@ export class AuthService {
   errorMsgs: any = '';
   serverMsg = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public router: Router) { }
 
   login(email: string, password: string) {
-    this.isloggedOut.next({ isloggedOut: false })
-
     const body = { email, password };
-    const url = this.url + constantas.auth;
+    const url = this.url + constantas.authUrl;
 
     this.http.post(url, body).subscribe((data: DataWithToken) => {
       this.token = data.token;
+      this.isLoggedOut.next({ isLoggedOut: false });
+
+      this.router.navigate(['profile']);
 
       if (!this.isEmptyData(data.data)) {
         this.dataSource.next({
@@ -74,7 +77,8 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(constantas.lineTestToken);
-    this.isloggedOut.next({ isloggedOut: true })
+    this.isLoggedOut.next({ isLoggedOut: true });
+    this.router.navigate(['login']);
 
     // отправляем данные на сервер, чтоб там сохранились результаты работы,
     // чтобы пользователь мог заходить с любой машины
@@ -85,7 +89,7 @@ export class AuthService {
         token: this.token, date: new Date()
       }
       : { token: this.token };
-    const url = this.url + '/put-profile-data';
+    const url = this.url + constantas.profileDataUrl;
 
     this.http.put(url, body).subscribe((data: any) => {
       this.serverMsg = data.message;
@@ -97,8 +101,7 @@ export class AuthService {
   }
 
   public get loggedIn(): boolean {
-    return (localStorage.getItem(constantas.lineTestToken) === this.token
-      && this.token !== null)
+    return (!!localStorage.getItem(constantas.lineTestToken) && this.token !== null)
   }
 
   sendTestResult() {
@@ -109,7 +112,7 @@ export class AuthService {
         token: this.token, date: new Date()
       }
       : { token: this.token };
-    const url = this.url + '/put-profile-data';
+    const url = this.url + constantas.profileDataUrl;
 
     this.http.post(url, body)
       .subscribe((data: any) => this.impulses = data.impulses);

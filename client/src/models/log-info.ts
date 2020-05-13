@@ -1,3 +1,3 @@
 export default class LogInfo {
-  isloggedOut: boolean
+  isLoggedOut: boolean
 }
